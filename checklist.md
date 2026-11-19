@@ -35,4 +35,7 @@
 ## 5. 마무리
 - [ ] 로컬 통합 테스트 (서버 + 에이전트 1대)
 - [ ] 설치 가이드 README
-- [ ] 클라우드 호스팅 결정
+- [x] 호스팅 결정 → UGREEN DXP2800 Docker
+- [ ] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨)
+- [ ] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
+- [ ] NAS 리버스 프록시에 연결 + WebSocket 동작 확인

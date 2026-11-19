@@ -14,6 +14,11 @@
 - 앱 차단은 Windows 방화벽, 도메인 차단은 hosts 파일로 시작
 - 자녀 PC에 관리 중 표시(투명성), 은닉 기능 없음
 
+## 호스팅 변경
+- 요청: 서버를 NAS(UGREEN DXP2800) Docker에 올리고 싶음
+- 결정: ASP.NET Core 유지, linux/amd64 이미지 + docker-compose, 기존 리버스 프록시 재사용
+- plan.md / checklist.md / context-notes.md 갱신
+
 ## 미해결
-- 클라우드 호스팅 대상 미정
+- NAS에서 쓰는 리버스 프록시 종류 확인
 - 구현 착수 승인 대기

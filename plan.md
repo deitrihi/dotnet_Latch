@@ -1,7 +1,7 @@
 # Latch — 자녀 PC 원격 관리 계획
 
 ## 목표
-부모가 **클라우드 웹 사이트**에서 자녀 Windows PC(1~2대)를 제어한다.
+부모가 **NAS(Docker)에 올린 웹 사이트**에서 자녀 Windows PC(1~2대)를 제어한다.
 
 MVP 기능.
 1. **입력 차단(잠금 화면)** — 전체화면 잠금 오버레이 + 키보드/마우스 입력 차단, 웹에서 잠금/해제.
@@ -16,7 +16,7 @@ MVP 기능.
 ## 아키텍처
 
 ```
-[부모 브라우저] ──HTTPS──▶ [Latch.Server (클라우드)]
+[부모 브라우저] ──HTTPS──▶ [Latch.Server (NAS Docker)]
                               ASP.NET Core + SignalR + SQLite
                                      ▲
                                      │ WebSocket(TLS), 디바이스 토큰
@@ -54,7 +54,13 @@ MVP 기능.
 - **Ctrl+Alt+Del**은 OS 보안 시퀀스라 차단 불가. 작업 관리자로 LockUI를 죽여도 서비스가 즉시 재실행하는 방식으로 대응.
 - **hosts 차단**은 브라우저 DoH(보안 DNS), VPN, IP 직접 접속으로 우회 가능. 필요 시 2차에서 WFP 기반 필터로 강화.
 - 자녀 계정이 **관리자 권한**이면 서비스 중지가 가능 → 자녀 계정은 표준 사용자로 운영할 것을 안내.
-- 클라우드 호스팅 대상(Azure/VPS 등)은 MVP 완성 후 결정. 개발은 로컬에서 진행.
+
+## 배포 (UGREEN DXP2800 Docker)
+- NAS CPU는 Intel N100(x64) → `mcr.microsoft.com/dotnet/aspnet:10.0` 기반 `linux/amd64` 이미지.
+- `docker-compose.yml`로 실행, SQLite DB와 데이터 보호 키는 NAS 폴더를 `/data` 볼륨으로 연결.
+- 외부 접속은 NAS에서 이미 운영 중인 다른 웹 서비스와 같은 리버스 프록시 경로를 사용. SignalR을 위해 WebSocket 업그레이드 허용 필요.
+- 컨테이너는 HTTP로만 열고 TLS는 리버스 프록시가 처리 → 서버에 `ForwardedHeaders` 설정.
+- 개발은 로컬에서 진행 후 이미지 배포.
 
 ## 범위 밖 (2차 이후)
 - 사용 시간 스케줄, 화면 캡처, 키 입력 기록 등은 MVP에 포함하지 않는다.
