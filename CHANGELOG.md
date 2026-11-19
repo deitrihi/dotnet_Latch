@@ -2,6 +2,13 @@
 
 ## [미커밋]
 
+- src/Latch.Agent/Enforcement/HostsFile.cs — 차단 목록이 비고 관리 구역이 없으면 hosts 파일을 건드리지 않도록 수정
+- src/Latch.Agent/Commands.cs — pair 시 서버 연결 실패를 예외 대신 메시지로 안내
+- src/Latch.Server/Pages/Device.cshtml — 하위 도메인은 따로 추가해야 한다는 안내 추가
+- tests/Latch.Tests/AgentTests.cs — hosts 무변경 테스트 추가
+
+## 2026-11-19 | 6d65a25
+
 - src/Latch.LockUI/Program.cs — 세션당 단일 실행 트레이 앱 진입점
 - src/Latch.LockUI/TrayContext.cs — 관리 중 트레이 표시, 상태 파일 감시로 잠금 화면 전환
 - src/Latch.LockUI/LockForm.cs — 모니터별 전체화면 잠금 창 (사용자 닫기 차단)

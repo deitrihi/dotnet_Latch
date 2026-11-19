@@ -18,8 +18,17 @@ public static class Commands
             return 1;
         }
 
-        using var http = new HttpClient { BaseAddress = baseUri };
-        var res = await http.PostAsJsonAsync(AgentHub.PairPath, new PairRequest(code, Environment.MachineName));
+        using var http = new HttpClient { BaseAddress = baseUri, Timeout = TimeSpan.FromSeconds(20) };
+        HttpResponseMessage res;
+        try
+        {
+            res = await http.PostAsJsonAsync(AgentHub.PairPath, new PairRequest(code, Environment.MachineName));
+        }
+        catch (Exception e) when (e is HttpRequestException or TaskCanceledException)
+        {
+            Console.Error.WriteLine($"서버에 연결할 수 없습니다 ({baseUri}): {e.Message}");
+            return 1;
+        }
         if (!res.IsSuccessStatusCode)
         {
             Console.Error.WriteLine($"페어링 실패 ({(int)res.StatusCode}): {await res.Content.ReadAsStringAsync()}");

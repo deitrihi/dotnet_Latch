@@ -32,7 +32,7 @@
         <div>
             <label for="domains">사이트</label>
             <textarea id="domains" name="domains" placeholder="youtube.com&#10;roblox.com">@Model.Device.BlockedDomains</textarea>
-            <div class="muted">한 줄에 하나. www. 는 자동 포함.</div>
+            <div class="muted">한 줄에 하나. www. 는 자동 포함, 그 외 하위 도메인(m.youtube.com 등)은 따로 추가.</div>
         </div>
     </div>
     @if (Model.Dropped.Length > 0) { <p class="error">무시된 항목: @string.Join(", ", Model.Dropped)</p> }

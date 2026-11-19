@@ -35,6 +35,13 @@ public class AgentTests
     }
 
     [Fact]
+    public void Hosts_UntouchedWhenNothingToBlock()
+    {
+        const string messy = "127.0.0.1 a\n\n\n";
+        Assert.Same(messy, HostsFile.Rewrite(messy, []));
+    }
+
+    [Fact]
     public void Hosts_RewriteIsIdempotent()
     {
         var once = HostsFile.Rewrite(Original, ["a.com"]);

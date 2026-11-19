@@ -14,6 +14,9 @@ public static partial class HostsFile
     /// <summary>기존 내용에서 관리 구역만 교체한 새 hosts 내용. 관리 구역 밖은 그대로 둔다.</summary>
     public static string Rewrite(string existing, IReadOnlyCollection<string> domains)
     {
+        // 관리 구역도 없고 차단할 것도 없으면 사용자 파일을 전혀 건드리지 않는다
+        if (domains.Count == 0 && !existing.Contains(Begin)) return existing;
+
         var kept = new List<string>();
         var inBlock = false;
         foreach (var line in existing.Replace("\r\n", "\n").Split('\n'))
