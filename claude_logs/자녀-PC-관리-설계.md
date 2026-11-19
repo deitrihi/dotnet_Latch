@@ -31,3 +31,9 @@
 - 실기 잠금·차단 테스트 (표준 계정)
 - NPM 연결 + WebSocket 확인
 
+
+## 배포 스크립트
+- 요청: dho/dbsql deploy.config 참고해 deploy.bat 작성
+- 행동: deploy.bat/deploy.sh/deploy.config.example 추가, deploy.config는 git 제외 (f4f9269)
+- 발견: NAS에 UGOS가 만든 docker-compose.yaml(root 소유)이 우선 적용됨 → -f docker-compose.yml 명시
+- 배포 실행: NAS 빌드·기동 성공, LAN에서 /Setup 200·허브 401 확인, 재시작 0회

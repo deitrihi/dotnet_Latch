@@ -2,6 +2,10 @@
 
 ## [미커밋]
 
+- checklist.md — NAS 배포 완료 표시
+
+## 2026-11-19 | f4f9269
+
 - deploy.sh — 로컬 빌드 검증 → NAS 전송(rsync 데몬 또는 tar) → docker compose 빌드·기동 배포 스크립트
 - deploy.bat — Git Bash로 deploy.sh를 실행하는 더블클릭 런처
 - deploy.config.example — NAS 접속 정보 템플릿

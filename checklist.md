@@ -39,4 +39,5 @@
 - [x] 호스팅 결정 → UGREEN DXP2800 Docker
 - [x] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨) — 빌드·컨테이너 실행·재시작 후 유지 확인
 - [x] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
-- [ ] NAS 리버스 프록시에 연결 + WebSocket 동작 확인
+- [x] NAS 배포 (deploy.sh, 192.168.0.200:8085 기동·LAN 접속 확인)
+- [ ] Nginx Proxy Manager 연결 + WebSocket 동작 확인
