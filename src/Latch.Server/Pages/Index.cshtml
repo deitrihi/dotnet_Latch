@@ -1,0 +1,63 @@
+@* 디바이스 목록·빠른 잠금·페어링 코드 발급 화면 *@
+@page
+@model IndexModel
+@using Latch.Server.Services
+@{ ViewData["Title"] = "자녀 PC"; }
+
+<h1>자녀 PC</h1>
+
+@foreach (var d in Model.Devices)
+{
+    <div class="card">
+        <div class="row spread">
+            <div>
+                <a href="/Device/@d.Id"><strong>@d.Name</strong></a>
+                @if (Model.Tracker.IsOnline(d.Id)) { <span class="badge on">온라인</span> }
+                else { <span class="badge off">오프라인</span> }
+                @if (d.Locked) { <span class="badge locked">잠김</span> }
+                <div class="muted">마지막 접속: @IndexModel.FormatTime(d.LastSeenAtUtc)</div>
+            </div>
+            <form method="post" asp-page="/Device" asp-page-handler="Lock" asp-route-id="@d.Id">
+                <input type="hidden" name="locked" value="@(!d.Locked)" />
+                <input type="hidden" name="message" value="@d.LockMessage" />
+                <input type="hidden" name="back" value="index" />
+                @if (d.Locked) { <button class="ok">잠금 해제</button> }
+                else { <button class="danger">잠그기</button> }
+            </form>
+        </div>
+    </div>
+}
+
+@if (Model.Devices.Count == 0)
+{
+    <div class="card muted">등록된 PC가 없습니다. 아래에서 페어링 코드를 발급해 자녀 PC의 에이전트에 입력하세요.</div>
+}
+
+<div class="card">
+    <h2>PC 추가</h2>
+    <ol class="steps">
+        <li>
+            자녀 PC에서 설치 파일 다운로드
+            @if (Model.Package is { } pkg)
+            {
+                <div class="row"><a class="button" href="@AgentPackage.DownloadPath">설치 파일 받기</a>
+                <span class="muted">@($"{pkg.Length / 1024d / 1024:0}MB") · @IndexModel.FormatTime(pkg.LastWriteTimeUtc) 빌드</span></div>
+            }
+            else
+            {
+                <div class="error">설치 패키지가 없습니다 (Docker 이미지로 배포하면 포함됩니다).</div>
+            }
+        </li>
+        <li>zip 파일을 <strong>마우스 오른쪽 → 모두 압축 풀기</strong> (압축을 푼 뒤 실행해야 합니다)</li>
+        <li><code>Latch\install-agent.bat</code> 더블클릭 → 보안 경고가 뜨면 <strong>실행</strong>, 관리자 권한 요청은 <strong>예</strong></li>
+        <li>서버 주소는 Enter, 아래에서 발급한 <strong>페어링 코드</strong> 입력</li>
+    </ol>
+    @if (Model.NewCode is not null)
+    {
+        <p class="code">@Model.NewCode.Code</p>
+        <p class="muted">@IndexModel.FormatTime(Model.NewCode.ExpiresAtUtc) 까지 유효 (1회용)</p>
+    }
+    <form method="post" asp-page-handler="CreateCode">
+        <button class="ghost">페어링 코드 발급</button>
+    </form>
+</div>

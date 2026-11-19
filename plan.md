@@ -1,0 +1,66 @@
+# Latch — 자녀 PC 원격 관리 계획
+
+## 목표
+부모가 **NAS(Docker)에 올린 웹 사이트**에서 자녀 Windows PC(1~2대)를 제어한다.
+
+MVP 기능.
+1. **입력 차단(잠금 화면)** — 전체화면 잠금 오버레이 + 키보드/마우스 입력 차단, 웹에서 잠금/해제.
+2. **앱/도메인별 차단** — 특정 프로그램의 네트워크 차단, 특정 사이트 접속 차단.
+3. **네트워크 감시** — 어떤 프로세스가 어느 주소에 연결 중인지 웹에서 조회.
+
+## 원칙
+- **투명성** — 자녀 PC에 트레이 아이콘/잠금 화면 안내 문구를 표시한다. 숨김·위장·백신 회피 기능은 만들지 않는다.
+- **오프라인 안전** — 에이전트는 마지막 정책을 로컬에 저장해, 인터넷이 끊겨도 정책이 유지된다.
+- **아웃바운드 연결만** — 에이전트가 서버로 접속(SignalR WebSocket)하므로 자녀 PC에 포트 개방/공유기 설정이 필요 없다.
+
+## 아키텍처
+
+```
+[부모 브라우저] ──HTTPS──▶ [Latch.Server (NAS Docker)]
+                              ASP.NET Core + SignalR + SQLite
+                                     ▲
+                                     │ WebSocket(TLS), 디바이스 토큰
+                                     │
+              ┌──────────── 자녀 PC ─┴───────────────────────┐
+              │ Latch.Agent (Windows 서비스, LocalSystem)     │
+              │  ├ 방화벽 규칙 적용 (앱별 차단)               │
+              │  ├ hosts 파일 관리 (도메인 차단)              │
+              │  ├ TCP 연결 테이블 수집 (감시)                │
+              │  └ 사용자 세션에 LockUI 실행/감시             │
+              │ Latch.LockUI (사용자 세션, WinForms/WPF)       │
+              │  ├ 전체화면 topmost 잠금 창                    │
+              │  └ 저수준 키보드/마우스 훅으로 입력 차단       │
+              └───────────────────────────────────────────────┘
+```
+
+## 프로젝트 구성 (.NET 10, 단일 솔루션)
+| 프로젝트 | 역할 |
+|---|---|
+| `Latch.Shared` | 서버↔에이전트 메시지 계약(DTO) |
+| `Latch.Server` | 웹 UI, 부모 로그인, 디바이스 등록, SignalR 허브, 정책 저장 |
+| `Latch.Agent` | Windows 서비스. 정책 적용·감시 데이터 전송 |
+| `Latch.LockUI` | 사용자 세션의 잠금 화면 프로세스 |
+| `Latch.Tests` | 정책 로직·직렬화 단위 테스트 |
+
+## 기술 선택
+- **입력 차단**: 서비스는 Session 0이라 화면을 못 띄움 → `WTSQueryUserToken` + `CreateProcessAsUser`로 사용자 세션에 LockUI 실행. LockUI는 `WH_KEYBOARD_LL`/`WH_MOUSE_LL` 훅으로 Win키·Alt+Tab 등 차단. 종료되면 서비스가 재실행.
+- **앱별 차단**: Windows 방화벽 COM API(`INetFwPolicy2`)로 프로그램 경로 기준 아웃바운드 차단 규칙 추가. 규칙 이름에 `Latch:` 접두사.
+- **도메인 차단**: hosts 파일에 `0.0.0.0 domain` 관리 구역(마커 주석 사이)을 기록 + DNS 캐시 flush.
+- **감시**: `GetExtendedTcpTable`(P/Invoke)로 PID↔원격 IP:포트 수집, 주기적으로 서버 전송.
+- **서버**: ASP.NET Core Minimal API + Razor Pages, 쿠키 인증(부모 계정 1개), EF Core + SQLite.
+- **디바이스 페어링**: 웹에서 일회용 페어링 코드 발급 → 에이전트 설치 시 입력 → 장기 디바이스 토큰 발급(DPAPI로 로컬 암호화 저장).
+
+## 알려진 한계 (MVP에서 수용)
+- **Ctrl+Alt+Del**은 OS 보안 시퀀스라 차단 불가. 작업 관리자로 LockUI를 죽여도 서비스가 즉시 재실행하는 방식으로 대응.
+- **hosts 차단**은 브라우저 DoH(보안 DNS), VPN, IP 직접 접속으로 우회 가능. 필요 시 2차에서 WFP 기반 필터로 강화.
+- 자녀 계정이 **관리자 권한**이면 서비스 중지가 가능 → 자녀 계정은 표준 사용자로 운영할 것을 안내.
+
+## 배포 (UGREEN DXP2800 Docker)
+- NAS CPU는 Intel N100(x64) → `mcr.microsoft.com/dotnet/aspnet:10.0` 기반 `linux/amd64` 이미지.
+- `docker-compose.yml`로 실행, SQLite DB와 데이터 보호 키는 NAS 폴더를 `/data` 볼륨으로 연결.
+- 외부 접속은 NAS에서 이미 운영 중인 다른 웹 서비스와 같은 리버스 프록시 경로를 사용. SignalR을 위해 WebSocket 업그레이드 허용 필요.
+- 컨테이너는 HTTP로만 열고 TLS는 리버스 프록시가 처리 → 서버에 `ForwardedHeaders` 설정.
+- 개발은 로컬에서 진행 후 이미지 배포.
+
+## 범위 밖 (2차 이후)
+- 사용 시간 스케줄, 화면 캡처, 키 입력 기록 등은 MVP에 포함하지 않는다.

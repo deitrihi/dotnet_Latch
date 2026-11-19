@@ -1,0 +1,20 @@
+# 배포 대상 NAS 접속 정보. deploy.config로 복사해서 실제 값을 채운다.
+#   cp deploy.config.example deploy.config
+# deploy.config는 .gitignore에 등록돼 git에 올라가지 않고, 서버 전송 목록에서도 제외된다.
+
+DEPLOY_HOST=nas.example.com
+DEPLOY_PORT=22
+DEPLOY_USER=youruser
+
+# SSH 개인키 경로. 비밀번호 인증은 지원하지 않는다.
+# 최초 1회: NAS에 공개키 등록 + 배포 계정을 docker 그룹에 추가 (sudo 없이 docker 실행)
+DEPLOY_KEY=~/.ssh/id_ed25519_nas
+
+# NAS에서 docker-compose.yml이 놓일 경로
+DEPLOY_PATH=/volume1/docker/latch
+
+# (선택) NAS "Rsync 백업 서비스"(데몬 모드) 사용 시. "모듈/하위경로" 형식.
+# 비워두거나 로컬에 rsync가 없으면 tar로 전송한다.
+DEPLOY_RSYNC_TARGET=
+DEPLOY_RSYNC_PORT=873
+DEPLOY_RSYNC_PASSWORD=

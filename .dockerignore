@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/data/
+publish/
+tests/
+.git/
+.vs/
+claude_logs/

@@ -1,0 +1,70 @@
+# Context Notes
+
+## 2026-11-19 — 요구사항 확정
+- 용도: **자녀 PC 관리**. 대상 1~2대. 서버는 **클라우드/외부**.
+- MVP: 입력 차단(잠금 화면), 앱/도메인별 차단, 네트워크 감시. (네트워크 전체 차단은 MVP 선택에서 빠짐 — 앱별 차단으로 대체 가능)
+
+## 결정과 이유
+- **에이전트가 서버로 아웃바운드 연결(SignalR)** — 클라우드 서버에서 가정 내 PC로 직접 접속하려면 포트포워딩이 필요하므로 역방향 구조 채택.
+- **서비스 + 사용자 세션 UI 분리** — Windows 서비스(Session 0)는 사용자 화면에 창을 띄울 수 없음.
+- **입력 차단은 `BlockInput` 대신 저수준 훅 + 잠금 창** — `BlockInput`은 호출 스레드 종료 시 풀리고 Ctrl+Alt+Del로 해제되며 안내 화면을 보여줄 수 없음.
+- **도메인 차단은 hosts 파일로 시작** — 구현이 단순. DoH 우회 한계는 plan.md에 명시, 필요 시 WFP로 강화.
+- **투명성 유지** — 자녀가 관리 중임을 알 수 있게 트레이 아이콘·안내 표시. 은닉 기능은 만들지 않음.
+- **.NET 10** — 설치된 SDK 중 최신 LTS.
+
+## 2026-11-19 — 호스팅 변경: 클라우드 → NAS Docker
+- 사용자 NAS: UGREEN DXP2800 (Intel N100, x64). Docker와 다른 웹 서비스가 이미 운영 중.
+- 서버는 ASP.NET Core 유지 — Linux 컨테이너 공식 지원, 메모리 부담 적음, `Latch.Shared`를 에이전트와 공유 가능.
+- 외부 접속은 기존 웹 서비스와 같은 리버스 프록시 사용. TLS는 프록시가 처리하고 컨테이너는 HTTP만 연다.
+- 리버스 프록시: **nginx-proxy 컨테이너(nas.conf 직접 편집)**. 프록시 호스트에서 "Websockets Support" 켜야 함.
+
+## 2026-11-19 — 구현 착수
+- Agent/Tests는 `net10.0-windows` (방화벽 COM, P/Invoke 사용). Shared/Server는 `net10.0` (Docker Linux).
+
+## 2026-11-19 — 서버 구현
+- NuGet 최신이 .NET 11용(11.0.0)이라 **10.0.15로 고정**.
+- `Microsoft.Extensions.Identity.Core`는 ASP.NET Core 공유 프레임워크에 이미 포함 → 패키지 없이 `PasswordHasher` 사용.
+- DB 스키마는 `EnsureCreated` (마이그레이션 없음). 스키마 변경이 생기면 EF 마이그레이션으로 전환할 것.
+- 디바이스 토큰은 SHA-256 해시만 저장. 페어링 코드는 8자·10분·1회용.
+- 로그인/초기설정/페어링에 **전역 10회/분** 레이트리밋 (부모 1명 기준이라 IP별 분리 안 함).
+- 연결 목록은 디바이스당 **최신 스냅샷 1개만** 저장 (이력 없음).
+- 시간 표시는 Asia/Seoul 고정.
+
+## 2026-11-19 — 에이전트 구현
+- **토큰 보호는 DPAPI 대신 폴더 ACL** (`%ProgramData%\Latch` = SYSTEM·Administrators 전용). LocalMachine DPAPI는 같은 PC의 아무 프로세스나 복호화 가능해서 실질 보호가 안 됨.
+- LockUI와의 통신은 `%ProgramData%\Latch\ui\state.json` 파일 (Users 읽기 전용). IPC 서버 없이 단순·견고하게.
+- 서버 재연결은 SignalR 자동 재연결 대신 **직접 루프 + 지수 백오프(3→60초)**. 첫 연결 실패도 같은 경로로 처리.
+- 앱 차단: 이름 항목은 실행 중 프로세스 경로를 10초마다 찾아 규칙 추가. 이미 만든 규칙(같은 파일명)은 목록에서 빠질 때까지 유지 → 방화벽 자체가 영속 저장소 역할.
+- hosts는 `0.0.0.0`과 `::` 둘 다 기록, `www.` 변형 자동 포함. 하위 도메인(m.youtube.com 등)은 직접 추가해야 함.
+- 연결 감시는 Established/SynSent + 비루프백만, 최대 500건.
+
+## 2026-11-19 — LockUI 구현
+- **관리자 계정 세션은 잠그지 않음** (부모 비상 해제 경로). 서버·인터넷이 죽은 상태로 잠기면 웹 해제가 불가하므로. 자녀 계정은 표준 사용자 전제. UAC 제한 토큰도 관리자로 판별(TokenElevationType=Limited).
+- 상태 파일 읽기 오류 시 **이전 상태 유지** — 일시적 오류로 잠금이 풀리지 않게. 파일이 없으면 해제.
+- LockUI는 잠금이 아닐 때도 트레이로 상주 → 투명성 + 잠금 전환 지연 최소화.
+- 실기 잠금 테스트는 개발 PC에서 하지 않음 (입력이 실제로 막힘). 통합 테스트 단계에서 표준 계정으로 확인.
+
+## 2026-11-19 — 배포 구성과 통합 확인
+- Docker 데이터는 **명명된 볼륨** 기본. 컨테이너가 비루트(uid 1654)라 NAS 폴더 바인드 시 소유권 문제가 생기기 쉬워서.
+- 포트 8085 (NAS의 다른 서비스와 충돌 회피용 임의 값).
+- 시간대: 컨테이너에 tzdata가 없어도 되도록 KST 고정 오프셋으로 대체.
+- 에이전트 게시는 Agent·LockUI를 **self-contained win-x64**로 한 폴더에 (약 120MB). 자녀 PC에 .NET 설치 불필요.
+- 설치 위치 `C:\Program Files\Latch` (표준 사용자 쓰기 불가 → 실행 파일 교체 방지). 서비스 실패 시 5초 후 자동 재시작.
+- .ps1은 Windows PowerShell 5.1 한글 깨짐 방지로 **UTF-8 BOM** 저장.
+- 개발 PC 통합 확인: 페어링 → 온라인 → 연결 44건 보고 → 잠금 v1/해제 v2 push 확인. hosts 무변경 확인 후 reset·데이터 삭제로 정리.
+- 이 과정에서 버그 발견·수정: 빈 정책에서도 hosts를 재작성하던 문제.
+- Docker 이미지 검증: 비루트(app) 실행, /data 쓰기, tzdata 존재, X-Forwarded-Proto 반영, 재시작 후 DB·로그인 쿠키 유지 확인.
+- DataProtection "unencrypted key" 경고는 수용 — 키가 컨테이너 전용 볼륨에만 있음.
+
+## 2026-11-19 — 배포 스크립트
+- `C:\dev\dho\dbsql`의 deploy.bat/deploy.sh 패턴을 따름 (Git Bash 런처 + SSH 키 인증 + NAS에서 빌드).
+- SSH 위 rsync는 UGREEN에서 "invalid path" 문제가 있어 제외. rsync 데몬 → 없으면 tar. 현재 Git Bash에는 rsync가 없어 tar 사용.
+- NAS `/volume1/docker/latch`에 UGOS가 만든 root 소유 `docker-compose.yaml`이 있어, compose가 `.yml`보다 우선 읽음 → 스크립트에서 `-f docker-compose.yml` 명시.
+- `deploy.config`(rsync 비밀번호 포함)는 git 제외. 실제 값은 dbsql 설정에서 경로만 latch로 바꿔 복사.
+
+## 2026-11-19 — 설치 패키지 웹 다운로드
+- 패키지는 **서버 Docker 빌드에서 함께 생성** (Linux에서 `EnableWindowsTargeting=true`로 win-x64 교차 빌드). 서버와 에이전트 버전이 항상 일치하고 deploy.bat 한 번으로 끝남. NAS에서 교차 빌드 경고·오류 없음 확인.
+- zip 구조: `Latch\` 폴더 아래 exe·dll + install-agent.bat/ps1 + uninstall-agent.ps1.
+- 다운로드는 **부모 로그인 필요** — 공개할 이유 없음. 자녀 PC 설정 시 어차피 로그인해서 페어링 코드를 받음.
+- 패키지는 wwwroot(공개 정적 파일) 밖 `/app/downloads`에 둠. 경로는 `Latch:AgentPackagePath`로 변경 가능(테스트용).
+- 서명 없는 bat/exe라 다운로드 후 보안 경고가 뜸 → 화면 안내에 "실행" 클릭 명시. 압축을 풀지 않고 zip 안에서 실행하면 실패하므로 안내에 포함.

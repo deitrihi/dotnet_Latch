@@ -1,0 +1,16 @@
+# Latch 서버 실행 설정 (NAS Docker). Nginx Proxy Manager → NAS-IP:8085 로 연결
+services:
+  latch:
+    build: .
+    image: latch-server:latest
+    container_name: latch
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    volumes:
+      # 명명된 볼륨: 권한 설정 없이 동작. NAS 폴더를 쓰려면 "/volume1/docker/latch:/data" 로 바꾸고
+      # 해당 폴더 소유자를 1654(컨테이너 app 사용자)로 지정
+      - latch-data:/data
+
+volumes:
+  latch-data:
