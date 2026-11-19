@@ -6,9 +6,9 @@
 - [x] 솔루션 + 5개 프로젝트 생성, 빌드 확인
 
 ## 1. 공통 계약 (Latch.Shared)
-- [ ] 정책 DTO (`LockState`, `BlockedApps`, `BlockedDomains`)
-- [ ] 감시 DTO (`ConnectionSnapshot`)
-- [ ] 직렬화 단위 테스트
+- [x] 정책 DTO (`LockState`, `BlockedApps`, `BlockedDomains`)
+- [x] 감시 DTO (`ConnectionSnapshot`)
+- [x] 직렬화 단위 테스트
 
 ## 2. 서버 (Latch.Server)
 - [ ] EF Core + SQLite (Parent, Device, Policy)

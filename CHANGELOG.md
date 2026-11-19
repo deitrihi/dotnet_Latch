@@ -2,6 +2,13 @@
 
 ## [미커밋]
 
+- src/Latch.Shared/Contracts.cs — 정책·연결 감시·페어링 메시지와 허브 이름 정의
+- src/Latch.Shared/PolicyRules.cs — 도메인·앱 차단 항목 정규화 규칙
+- tests/Latch.Tests/SharedTests.cs — 정규화·직렬화 테스트
+- checklist.md — 1단계 완료 표시
+
+## 2026-11-19 | d8a544b
+
 - Latch.slnx, src/*, tests/Latch.Tests — 솔루션과 5개 프로젝트 생성 (Agent/Tests는 net10.0-windows)
 - .gitignore — dotnet 기본 gitignore 추가
 - checklist.md — 0단계 완료 표시
