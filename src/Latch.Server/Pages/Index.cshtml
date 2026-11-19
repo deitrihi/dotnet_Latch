@@ -18,7 +18,8 @@
                 <div class="muted">마지막 접속: @IndexModel.FormatTime(d.LastSeenAtUtc)</div>
             </div>
             <form method="post" asp-page="/Device" asp-page-handler="Lock" asp-route-id="@d.Id">
-                <input type="hidden" name="locked" value="@(!d.Locked)" />
+                @* bool을 직접 넣으면 Razor가 boolean 속성으로 취급해 value="value"가 되므로 문자열로 출력 *@
+                <input type="hidden" name="locked" value="@(d.Locked ? "false" : "true")" />
                 <input type="hidden" name="message" value="@d.LockMessage" />
                 <input type="hidden" name="back" value="index" />
                 @if (d.Locked) { <button class="ok">잠금 해제</button> }

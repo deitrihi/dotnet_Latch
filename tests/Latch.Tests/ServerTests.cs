@@ -163,6 +163,34 @@ public sealed class ServerTests : IDisposable
     }
 
     [Fact]
+    public async Task IndexLockButton_TogglesLock()
+    {
+        var pair = await PairAsync();
+        var client = await LoginAsync();
+
+        for (var expected = true; ; expected = !expected)
+        {
+            var html = await client.GetStringAsync("/");
+            var form = System.Text.RegularExpressions.Regex.Match(html,
+                "<form method=\"post\" action=\"([^\"]*handler=Lock[^\"]*)\">(.*?)</form>",
+                System.Text.RegularExpressions.RegexOptions.Singleline);
+            Assert.True(form.Success, "목록 화면에 잠금 폼이 없음");
+
+            var fields = System.Text.RegularExpressions.Regex
+                .Matches(form.Groups[2].Value, "name=\"([^\"]+)\"[^>]*value=\"([^\"]*)\"")
+                .ToDictionary(m => m.Groups[1].Value, m => System.Net.WebUtility.HtmlDecode(m.Groups[2].Value));
+            var res = await client.PostAsync(System.Net.WebUtility.HtmlDecode(form.Groups[1].Value),
+                new FormUrlEncodedContent(fields));
+            res.EnsureSuccessStatusCode();
+
+            using var scope = _factory.Services.CreateScope();
+            var device = await scope.ServiceProvider.GetRequiredService<LatchDb>().Devices.FindAsync(pair.DeviceId);
+            Assert.Equal(expected, device!.Locked);
+            if (!expected) break;
+        }
+    }
+
+    [Fact]
     public async Task WebPages_RequireLogin()
     {
         var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
