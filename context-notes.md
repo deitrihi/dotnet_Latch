@@ -20,3 +20,12 @@
 
 ## 2026-11-19 — 구현 착수
 - Agent/Tests는 `net10.0-windows` (방화벽 COM, P/Invoke 사용). Shared/Server는 `net10.0` (Docker Linux).
+
+## 2026-11-19 — 서버 구현
+- NuGet 최신이 .NET 11용(11.0.0)이라 **10.0.15로 고정**.
+- `Microsoft.Extensions.Identity.Core`는 ASP.NET Core 공유 프레임워크에 이미 포함 → 패키지 없이 `PasswordHasher` 사용.
+- DB 스키마는 `EnsureCreated` (마이그레이션 없음). 스키마 변경이 생기면 EF 마이그레이션으로 전환할 것.
+- 디바이스 토큰은 SHA-256 해시만 저장. 페어링 코드는 8자·10분·1회용.
+- 로그인/초기설정/페어링에 **전역 10회/분** 레이트리밋 (부모 1명 기준이라 IP별 분리 안 함).
+- 연결 목록은 디바이스당 **최신 스냅샷 1개만** 저장 (이력 없음).
+- 시간 표시는 Asia/Seoul 고정.

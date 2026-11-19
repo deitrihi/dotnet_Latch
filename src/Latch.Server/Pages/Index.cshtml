@@ -1,0 +1,45 @@
+@* 디바이스 목록·빠른 잠금·페어링 코드 발급 화면 *@
+@page
+@model IndexModel
+@{ ViewData["Title"] = "자녀 PC"; }
+
+<h1>자녀 PC</h1>
+
+@foreach (var d in Model.Devices)
+{
+    <div class="card">
+        <div class="row spread">
+            <div>
+                <a href="/Device/@d.Id"><strong>@d.Name</strong></a>
+                @if (Model.Tracker.IsOnline(d.Id)) { <span class="badge on">온라인</span> }
+                else { <span class="badge off">오프라인</span> }
+                @if (d.Locked) { <span class="badge locked">잠김</span> }
+                <div class="muted">마지막 접속: @IndexModel.FormatTime(d.LastSeenAtUtc)</div>
+            </div>
+            <form method="post" asp-page="/Device" asp-page-handler="Lock" asp-route-id="@d.Id">
+                <input type="hidden" name="locked" value="@(!d.Locked)" />
+                <input type="hidden" name="message" value="@d.LockMessage" />
+                <input type="hidden" name="back" value="index" />
+                @if (d.Locked) { <button class="ok">잠금 해제</button> }
+                else { <button class="danger">잠그기</button> }
+            </form>
+        </div>
+    </div>
+}
+
+@if (Model.Devices.Count == 0)
+{
+    <div class="card muted">등록된 PC가 없습니다. 아래에서 페어링 코드를 발급해 자녀 PC의 에이전트에 입력하세요.</div>
+}
+
+<div class="card">
+    <h2>PC 추가</h2>
+    @if (Model.NewCode is not null)
+    {
+        <p class="code">@Model.NewCode.Code</p>
+        <p class="muted">@IndexModel.FormatTime(Model.NewCode.ExpiresAtUtc) 까지 유효 (1회용)</p>
+    }
+    <form method="post" asp-page-handler="CreateCode">
+        <button class="ghost">페어링 코드 발급</button>
+    </form>
+</div>

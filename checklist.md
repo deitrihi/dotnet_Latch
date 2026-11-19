@@ -11,11 +11,11 @@
 - [x] 직렬화 단위 테스트
 
 ## 2. 서버 (Latch.Server)
-- [ ] EF Core + SQLite (Parent, Device, Policy)
-- [ ] 부모 로그인 (쿠키 인증, 비밀번호 해시)
-- [ ] 페어링 코드 발급 → 디바이스 토큰 교환 API
-- [ ] SignalR 허브 (디바이스 토큰 인증, 정책 push, 감시 데이터 수신)
-- [ ] 웹 UI: 디바이스 목록 / 잠금 토글 / 차단 목록 편집 / 연결 목록
+- [x] EF Core + SQLite (Parent, Device, Policy)
+- [x] 부모 로그인 (쿠키 인증, 비밀번호 해시)
+- [x] 페어링 코드 발급 → 디바이스 토큰 교환 API
+- [x] SignalR 허브 (디바이스 토큰 인증, 정책 push, 감시 데이터 수신)
+- [x] 웹 UI: 디바이스 목록 / 잠금 토글 / 차단 목록 편집 / 연결 목록
 
 ## 3. 에이전트 (Latch.Agent)
 - [ ] Worker Service + Windows 서비스 등록

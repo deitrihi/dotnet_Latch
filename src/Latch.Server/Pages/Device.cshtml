@@ -1,0 +1,72 @@
+@* 디바이스 상세: 잠금, 앱/도메인 차단 목록, 네트워크 연결 감시 *@
+@page "{id:guid}"
+@model DeviceModel
+@{ ViewData["Title"] = Model.Device.Name; }
+
+<p><a href="/">← 목록</a></p>
+<h1>
+    @Model.Device.Name
+    @if (Model.Online) { <span class="badge on">온라인</span> } else { <span class="badge off">오프라인</span> }
+</h1>
+
+<div class="card">
+    <h2>잠금 화면 @if (Model.Device.Locked) { <span class="badge locked">잠김</span> }</h2>
+    <form method="post" asp-page-handler="Lock">
+        <label for="msg">잠금 화면 메시지</label>
+        <input id="msg" type="text" name="message" value="@Model.Device.LockMessage" placeholder="예: 숙제 끝나면 풀어줄게" />
+        <p class="row">
+            <button class="danger" name="locked" value="true">잠그기</button>
+            <button class="ok" name="locked" value="false">잠금 해제</button>
+        </p>
+    </form>
+</div>
+
+<form method="post" asp-page-handler="Lists" class="card">
+    <h2>차단 목록</h2>
+    <div class="grid2">
+        <div>
+            <label for="apps">앱 (네트워크 차단)</label>
+            <textarea id="apps" name="apps" placeholder="Discord.exe&#10;C:\Games\game.exe">@Model.Device.BlockedApps</textarea>
+            <div class="muted">한 줄에 하나. 실행 파일 이름 또는 전체 경로.</div>
+        </div>
+        <div>
+            <label for="domains">사이트</label>
+            <textarea id="domains" name="domains" placeholder="youtube.com&#10;roblox.com">@Model.Device.BlockedDomains</textarea>
+            <div class="muted">한 줄에 하나. www. 는 자동 포함.</div>
+        </div>
+    </div>
+    @if (Model.Dropped.Length > 0) { <p class="error">무시된 항목: @string.Join(", ", Model.Dropped)</p> }
+    <p><button>저장</button></p>
+</form>
+
+<div class="card">
+    <div class="row spread">
+        <h2>네트워크 연결</h2>
+        <a href="/Device/@Model.Device.Id">새로고침</a>
+    </div>
+    @if (Model.Snapshot is null)
+    {
+        <p class="muted">아직 보고된 데이터가 없습니다.</p>
+    }
+    else
+    {
+        <p class="muted">@IndexModel.FormatTime(Model.Snapshot.CapturedAt.UtcDateTime) 기준 · @(Model.Snapshot.Connections.Length)건</p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>프로세스</th><th>원격 주소</th><th>포트</th><th>상태</th></tr></thead>
+                <tbody>
+                @foreach (var c in Model.Snapshot.Connections.OrderBy(c => c.ProcessName).ThenBy(c => c.RemoteAddress))
+                {
+                    <tr><td>@c.ProcessName <span class="muted">(@c.Pid)</span></td><td>@c.RemoteAddress</td><td>@c.RemotePort</td><td>@c.State</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<form method="post" asp-page-handler="Delete" class="card"
+      onsubmit="return confirm('이 PC 등록을 삭제할까요? 에이전트를 다시 페어링해야 합니다.')">
+    <h2>등록 삭제</h2>
+    <button class="ghost">이 PC 삭제</button>
+</form>

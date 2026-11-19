@@ -1,0 +1,17 @@
+@* 최초 실행 시 부모 비밀번호를 설정하는 페이지 *@
+@page
+@model SetupModel
+@{ ViewData["Title"] = "초기 설정"; }
+
+<h1>초기 설정</h1>
+<div class="card">
+    <p class="muted">처음 실행입니다. 부모 계정 비밀번호를 정하세요. (8자 이상)</p>
+    <form method="post">
+        <label for="pw">비밀번호</label>
+        <input id="pw" type="password" asp-for="Password" autocomplete="new-password" />
+        <label for="pw2">비밀번호 확인</label>
+        <input id="pw2" type="password" asp-for="Confirm" autocomplete="new-password" />
+        @if (Model.Error is not null) { <p class="error">@Model.Error</p> }
+        <p><button>저장</button></p>
+    </form>
+</div>

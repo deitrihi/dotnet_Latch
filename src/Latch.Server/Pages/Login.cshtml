@@ -1,0 +1,14 @@
+@* 부모 로그인 페이지 *@
+@page
+@model LoginModel
+@{ ViewData["Title"] = "로그인"; }
+
+<h1>로그인</h1>
+<div class="card">
+    <form method="post">
+        <label for="pw">비밀번호</label>
+        <input id="pw" type="password" asp-for="Password" autocomplete="current-password" autofocus />
+        @if (Model.Error is not null) { <p class="error">@Model.Error</p> }
+        <p><button>로그인</button></p>
+    </form>
+</div>
