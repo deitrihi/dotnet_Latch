@@ -2,6 +2,16 @@
 
 ## [미커밋]
 
+- src/Latch.LockUI/Program.cs — 세션당 단일 실행 트레이 앱 진입점
+- src/Latch.LockUI/TrayContext.cs — 관리 중 트레이 표시, 상태 파일 감시로 잠금 화면 전환
+- src/Latch.LockUI/LockForm.cs — 모니터별 전체화면 잠금 창 (사용자 닫기 차단)
+- src/Latch.LockUI/InputBlocker.cs — 저수준 키보드·마우스 훅으로 입력 차단
+- src/Latch.LockUI/UserCheck.cs — 관리자 계정 판별 (비상 해제용으로 잠금 제외)
+- src/Latch.LockUI/Form1* — 템플릿 폼 제거
+- checklist.md, context-notes.md — 4단계 완료 및 결정 기록
+
+## 2026-11-19 | 6a02bda
+
 - src/Latch.Shared/LocalUiState.cs — 에이전트↔LockUI 로컬 잠금 상태 파일 계약
 - src/Latch.Agent/AgentStore.cs — 권한 제한된 ProgramData에 설정·정책·UI 상태 저장
 - src/Latch.Agent/Enforcement/HostsFile.cs — hosts 관리 구역으로 도메인 차단 + DNS 캐시 비우기

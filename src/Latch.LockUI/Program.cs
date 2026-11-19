@@ -1,16 +1,15 @@
+// LockUI 진입점: 사용자 세션당 하나만 실행되는 트레이 앱
 namespace Latch.LockUI;
 
 static class Program
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
     [STAThread]
     static void Main()
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
+        using var mutex = new Mutex(initiallyOwned: true, @"Local\LatchLockUI", out var created);
+        if (!created) return;
+
         ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+        Application.Run(new TrayContext());
+    }
 }
