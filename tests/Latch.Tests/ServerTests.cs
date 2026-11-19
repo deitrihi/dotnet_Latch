@@ -15,10 +15,34 @@ public sealed class ServerTests : IDisposable
     private readonly string _dataDir = Path.Combine(Path.GetTempPath(), "latch-test-" + Guid.NewGuid());
     private readonly WebApplicationFactory<Program> _factory;
 
+    private string PackagePath => Path.Combine(_dataDir, "pkg.zip");
+
     public ServerTests()
     {
         _factory = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(b => b.UseSetting("Latch:DataDir", _dataDir));
+            .WithWebHostBuilder(b => b
+                .UseSetting("Latch:DataDir", _dataDir)
+                .UseSetting("Latch:AgentPackagePath", Path.Combine(_dataDir, "pkg.zip")));
+    }
+
+    /// <summary>초기 설정 → 로그인까지 거친 (쿠키를 가진) 클라이언트.</summary>
+    private async Task<HttpClient> LoginAsync()
+    {
+        var client = _factory.CreateClient();
+        foreach (var page in new[] { "/Setup", "/Login" })
+        {
+            var html = await client.GetStringAsync(page);
+            var token = System.Text.RegularExpressions.Regex
+                .Match(html, "name=\"__RequestVerificationToken\" type=\"hidden\" value=\"([^\"]+)\"").Groups[1].Value;
+            var form = new Dictionary<string, string>
+            {
+                ["__RequestVerificationToken"] = token,
+                ["Password"] = "test-pass-123",
+                ["Confirm"] = "test-pass-123",
+            };
+            (await client.PostAsync(page, new FormUrlEncodedContent(form))).EnsureSuccessStatusCode();
+        }
+        return client;
     }
 
     public void Dispose()
@@ -109,6 +133,33 @@ public sealed class ServerTests : IDisposable
             Assert.Equal("chrome", DeviceService.ReadSnapshot(device!)!.Connections.Single().ProcessName);
             Assert.True(_factory.Services.GetRequiredService<ConnectionTracker>().IsOnline(pair.DeviceId));
         }
+    }
+
+    [Fact]
+    public async Task AgentDownload_RequiresLogin()
+    {
+        var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var res = await client.GetAsync(AgentPackage.DownloadPath);
+        Assert.Equal(HttpStatusCode.Redirect, res.StatusCode);
+        Assert.StartsWith("/Login", res.Headers.Location!.PathAndQuery);
+    }
+
+    [Fact]
+    public async Task AgentDownload_ServesPackageAfterLogin()
+    {
+        var client = await LoginAsync();
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync(AgentPackage.DownloadPath)).StatusCode);
+        Assert.Contains("설치 패키지가 없습니다", await client.GetStringAsync("/"));
+
+        Directory.CreateDirectory(_dataDir);
+        await File.WriteAllBytesAsync(PackagePath, [0x50, 0x4B, 0x05, 0x06]);
+
+        var res = await client.GetAsync(AgentPackage.DownloadPath);
+        res.EnsureSuccessStatusCode();
+        Assert.Equal("application/zip", res.Content.Headers.ContentType!.MediaType);
+        Assert.Equal(AgentPackage.FileName, res.Content.Headers.ContentDisposition!.FileNameStar);
+        Assert.Equal(4, (await res.Content.ReadAsByteArrayAsync()).Length);
+        Assert.Contains("설치 파일 받기", await client.GetStringAsync("/"));
     }
 
     [Fact]

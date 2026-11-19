@@ -2,6 +2,15 @@
 
 ## [미커밋]
 
+- Dockerfile — 이미지 빌드 시 Agent+LockUI(win-x64)와 설치 스크립트를 latch-agent-win-x64.zip으로 묶어 /app/downloads에 포함
+- src/Latch.Server/Services/AgentPackage.cs — 설치 패키지 위치·정보 제공
+- src/Latch.Server/Program.cs — /download/agent 다운로드 엔드포인트 (로그인 필요)
+- src/Latch.Server/Pages/Index.cshtml(.cs), wwwroot/site.css — PC 추가 카드에 다운로드 버튼과 설치 순서 안내
+- tests/Latch.Tests/ServerTests.cs — 다운로드 로그인 요구·패키지 제공 테스트, 로그인 헬퍼
+- checklist.md, context-notes.md — 배포 패키지 결정 기록
+
+## 2026-11-19 | c175501
+
 - checklist.md — 자녀 PC 설치·WebSocket 실연결 확인 표시
 
 ## 2026-11-19 | 21b2550

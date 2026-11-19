@@ -1,6 +1,7 @@
 @* 디바이스 목록·빠른 잠금·페어링 코드 발급 화면 *@
 @page
 @model IndexModel
+@using Latch.Server.Services
 @{ ViewData["Title"] = "자녀 PC"; }
 
 <h1>자녀 PC</h1>
@@ -34,6 +35,23 @@
 
 <div class="card">
     <h2>PC 추가</h2>
+    <ol class="steps">
+        <li>
+            자녀 PC에서 설치 파일 다운로드
+            @if (Model.Package is { } pkg)
+            {
+                <div class="row"><a class="button" href="@AgentPackage.DownloadPath">설치 파일 받기</a>
+                <span class="muted">@($"{pkg.Length / 1024d / 1024:0}MB") · @IndexModel.FormatTime(pkg.LastWriteTimeUtc) 빌드</span></div>
+            }
+            else
+            {
+                <div class="error">설치 패키지가 없습니다 (Docker 이미지로 배포하면 포함됩니다).</div>
+            }
+        </li>
+        <li>zip 파일을 <strong>마우스 오른쪽 → 모두 압축 풀기</strong> (압축을 푼 뒤 실행해야 합니다)</li>
+        <li><code>Latch\install-agent.bat</code> 더블클릭 → 보안 경고가 뜨면 <strong>실행</strong>, 관리자 권한 요청은 <strong>예</strong></li>
+        <li>서버 주소는 Enter, 아래에서 발급한 <strong>페어링 코드</strong> 입력</li>
+    </ol>
     @if (Model.NewCode is not null)
     {
         <p class="code">@Model.NewCode.Code</p>

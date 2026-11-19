@@ -61,3 +61,10 @@
 - SSH 위 rsync는 UGREEN에서 "invalid path" 문제가 있어 제외. rsync 데몬 → 없으면 tar. 현재 Git Bash에는 rsync가 없어 tar 사용.
 - NAS `/volume1/docker/latch`에 UGOS가 만든 root 소유 `docker-compose.yaml`이 있어, compose가 `.yml`보다 우선 읽음 → 스크립트에서 `-f docker-compose.yml` 명시.
 - `deploy.config`(rsync 비밀번호 포함)는 git 제외. 실제 값은 dbsql 설정에서 경로만 latch로 바꿔 복사.
+
+## 2026-11-19 — 설치 패키지 웹 다운로드
+- 패키지는 **서버 Docker 빌드에서 함께 생성** (Linux에서 `EnableWindowsTargeting=true`로 win-x64 교차 빌드). 서버와 에이전트 버전이 항상 일치하고 deploy.bat 한 번으로 끝남. NAS에서 교차 빌드 경고·오류 없음 확인.
+- zip 구조: `Latch\` 폴더 아래 exe·dll + install-agent.bat/ps1 + uninstall-agent.ps1.
+- 다운로드는 **부모 로그인 필요** — 공개할 이유 없음. 자녀 PC 설정 시 어차피 로그인해서 페어링 코드를 받음.
+- 패키지는 wwwroot(공개 정적 파일) 밖 `/app/downloads`에 둠. 경로는 `Latch:AgentPackagePath`로 변경 가능(테스트용).
+- 서명 없는 bat/exe라 다운로드 후 보안 경고가 뜸 → 화면 안내에 "실행" 클릭 명시. 압축을 풀지 않고 zip 안에서 실행하면 실패하므로 안내에 포함.

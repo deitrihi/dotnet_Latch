@@ -7,8 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Latch.Server.Pages;
 
-public class IndexModel(LatchDb db, DeviceService devices, ConnectionTracker tracker) : PageModel
+public class IndexModel(LatchDb db, DeviceService devices, ConnectionTracker tracker, AgentPackage package) : PageModel
 {
+    public FileInfo? Package => package.Info;
     // 컨테이너에 tzdata가 없어도 동작하도록 고정 오프셋으로 대체
     private static readonly TimeZoneInfo Kst =
         TimeZoneInfo.TryFindSystemTimeZoneById("Asia/Seoul", out var tz)

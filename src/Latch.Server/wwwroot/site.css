@@ -42,3 +42,8 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 th { color: var(--muted); font-weight: 600; }
 a { color: var(--accent); }
+a.button { display: inline-block; padding: 9px 16px; border-radius: 8px; background: var(--accent); color: #fff; text-decoration: none; }
+ol.steps { margin: 0 0 16px; padding-left: 20px; }
+ol.steps li { margin-bottom: 8px; }
+ol.steps .row { margin-top: 6px; }
+code { font: 13px ui-monospace, Consolas, monospace; background: var(--bg); padding: 1px 5px; border-radius: 4px; }

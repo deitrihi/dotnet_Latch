@@ -42,3 +42,8 @@
 - [x] NAS 배포 (deploy.sh, 192.168.0.200:8085 기동·LAN 접속 확인)
 - [x] nginx(nas.conf) 연결 + DNS(latch.deitrihi.dev) + HTTPS 확인
 - [x] 자녀 PC 설치·페어링, WebSocket(101) 실연결 및 60초 이상 유지 확인
+
+## 6. 설치 패키지 다운로드
+- [x] Docker 빌드에서 win-x64 패키지 zip 생성 (EnableWindowsTargeting, NAS에서 교차 빌드 확인)
+- [x] /download/agent (로그인 필요) + 메인 화면 안내
+- [ ] NAS 배포 후 실제 다운로드·설치 확인
