@@ -2,6 +2,10 @@
 
 ## [미커밋]
 
+- claude_logs/자녀-PC-관리-설계.md — 설치 패키지·배포·push 기록 추가
+
+## 2026-11-19 | 9c723e2
+
 - scripts/install-agent.bat, deploy.bat — 줄바꿈을 CRLF로 변환 (LF 전용 bat 파싱 오류 방지)
 - .gitattributes — .bat CRLF 고정
 
