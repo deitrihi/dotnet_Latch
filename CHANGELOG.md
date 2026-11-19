@@ -2,6 +2,15 @@
 
 ## [미커밋]
 
+- Dockerfile, .dockerignore, docker-compose.yml — NAS용 서버 이미지 (linux/amd64, 비루트, /data 볼륨, 8085 포트)
+- src/Latch.Server/Pages/Index.cshtml.cs — tzdata 없는 환경에서도 KST 표시되도록 대체 처리
+- scripts/publish-agent.ps1 — Agent+LockUI self-contained 단일 폴더 게시
+- scripts/install-agent.ps1, uninstall-agent.ps1 — 서비스 설치·페어링·자동 재시작 설정, 정리 후 제거
+- README.md — 배포·설치·사용·한계 안내
+- checklist.md, context-notes.md — 5단계 진행 및 결정 기록
+
+## 2026-11-19 | 7eca0ef
+
 - src/Latch.Agent/Enforcement/HostsFile.cs — 차단 목록이 비고 관리 구역이 없으면 hosts 파일을 건드리지 않도록 수정
 - src/Latch.Agent/Commands.cs — pair 시 서버 연결 실패를 예외 대신 메시지로 안내
 - src/Latch.Server/Pages/Device.cshtml — 하위 도메인은 따로 추가해야 한다는 안내 추가

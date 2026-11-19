@@ -9,7 +9,11 @@ namespace Latch.Server.Pages;
 
 public class IndexModel(LatchDb db, DeviceService devices, ConnectionTracker tracker) : PageModel
 {
-    private static readonly TimeZoneInfo Kst = TimeZoneInfo.FindSystemTimeZoneById("Asia/Seoul");
+    // 컨테이너에 tzdata가 없어도 동작하도록 고정 오프셋으로 대체
+    private static readonly TimeZoneInfo Kst =
+        TimeZoneInfo.TryFindSystemTimeZoneById("Asia/Seoul", out var tz)
+            ? tz
+            : TimeZoneInfo.CreateCustomTimeZone("KST", TimeSpan.FromHours(9), "KST", "KST");
 
     public ConnectionTracker Tracker => tracker;
     public List<Device> Devices { get; private set; } = [];

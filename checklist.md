@@ -33,9 +33,10 @@
 - [x] 트레이 아이콘 (관리 중 표시)
 
 ## 5. 마무리
-- [ ] 로컬 통합 테스트 (서버 + 에이전트 1대)
-- [ ] 설치 가이드 README
+- [x] 로컬 통합 테스트 (서버 + 에이전트 1대, 빈 정책·잠금 push까지)
+- [ ] 실기 잠금 화면·앱/사이트 차단 테스트 (자녀 PC 또는 표준 계정)
+- [x] 설치 가이드 README + 설치/제거 스크립트
 - [x] 호스팅 결정 → UGREEN DXP2800 Docker
-- [ ] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨)
-- [ ] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
+- [x] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨) — 이미지 빌드는 미검증
+- [x] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
 - [ ] NAS 리버스 프록시에 연결 + WebSocket 동작 확인
