@@ -2,6 +2,11 @@
 
 ## [미커밋]
 
+- checklist.md — nginx·DNS·HTTPS 외부 접속 확인 표시
+- context-notes.md — 리버스 프록시가 NPM이 아닌 nginx-proxy 컨테이너임을 정정
+
+## 2026-11-19 | 6db63db
+
 - checklist.md — NAS 배포 완료 표시
 
 ## 2026-11-19 | f4f9269

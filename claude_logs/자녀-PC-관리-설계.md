@@ -37,3 +37,12 @@
 - 행동: deploy.bat/deploy.sh/deploy.config.example 추가, deploy.config는 git 제외 (f4f9269)
 - 발견: NAS에 UGOS가 만든 docker-compose.yaml(root 소유)이 우선 적용됨 → -f docker-compose.yml 명시
 - 배포 실행: NAS 빌드·기동 성공, LAN에서 /Setup 200·허브 401 확인, 재시작 0회
+
+## nginx 연결
+- nas.conf에 latch.deitrihi.dev 블록(사용자 추가) → nginx -t 통과, reload
+- NAS 내부 8443 경유: latch 302(https 리다이렉트 정상)·허브 401, dho·wiki 정상
+- 미해결: DNS latch CNAME 미등록 (외부 접속 불가), 초기 비밀번호 설정
+
+## 외부 공개
+- DNS latch CNAME 반영 확인, https://latch.deitrihi.dev 외부 접속·와일드카드 인증서 검증 통과
+- 미해결: 초기 비밀번호 설정(사용자), WebSocket 실연결은 에이전트 설치 시 확인
