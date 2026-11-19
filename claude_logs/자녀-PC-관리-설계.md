@@ -19,6 +19,15 @@
 - 결정: ASP.NET Core 유지, linux/amd64 이미지 + docker-compose, 기존 리버스 프록시 재사용
 - plan.md / checklist.md / context-notes.md 갱신
 
+## 구현 (MVP)
+- 요청: 구현 시작 (리버스 프록시 = Nginx Proxy Manager)
+- 커밋: d8a544b 골격 → 607ad9d Shared → bc5b123 Server → 6a02bda Agent → 6d65a25 LockUI → 7eca0ef 버그 수정 → 92205fb 배포
+- 테스트 25개 통과. 개발 PC에서 페어링·온라인·연결 보고·잠금 push 통합 확인 후 정리
+- 결정: 토큰 보호는 ProgramData ACL, 관리자 세션은 잠금 제외(비상 해제), 재연결 지수 백오프, Docker 명명된 볼륨
+- 발견/수정: 빈 정책에서 hosts 재작성, pair 연결 실패 시 크래시
+
 ## 미해결
-- NAS에서 쓰는 리버스 프록시 종류 확인
-- 구현 착수 승인 대기
+- (해결) Docker 이미지 빌드·실행 검증 완료
+- 실기 잠금·차단 테스트 (표준 계정)
+- NPM 연결 + WebSocket 확인
+

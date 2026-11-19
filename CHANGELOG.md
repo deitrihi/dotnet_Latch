@@ -2,6 +2,11 @@
 
 ## [미커밋]
 
+- src/Latch.Server/Pages/Login.cshtml.cs — 정렬 없는 FirstOrDefault EF 경고 제거
+- checklist.md, context-notes.md — Docker 이미지 검증 결과 기록
+
+## 2026-11-19 | 92205fb
+
 - Dockerfile, .dockerignore, docker-compose.yml — NAS용 서버 이미지 (linux/amd64, 비루트, /data 볼륨, 8085 포트)
 - src/Latch.Server/Pages/Index.cshtml.cs — tzdata 없는 환경에서도 KST 표시되도록 대체 처리
 - scripts/publish-agent.ps1 — Agent+LockUI self-contained 단일 폴더 게시

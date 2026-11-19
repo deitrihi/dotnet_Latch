@@ -22,7 +22,7 @@ public class LoginModel(LatchDb db, IPasswordHasher<AdminAccount> hasher) : Page
 
     public async Task<IActionResult> OnPostAsync(string? returnUrl)
     {
-        var admin = await db.Admins.FirstOrDefaultAsync();
+        var admin = await db.Admins.OrderBy(a => a.Id).FirstOrDefaultAsync();
         if (admin is null) return RedirectToPage("/Setup");
 
         if (hasher.VerifyHashedPassword(admin, admin.PasswordHash, Password) == PasswordVerificationResult.Failed)

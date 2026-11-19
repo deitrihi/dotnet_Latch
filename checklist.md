@@ -37,6 +37,6 @@
 - [ ] 실기 잠금 화면·앱/사이트 차단 테스트 (자녀 PC 또는 표준 계정)
 - [x] 설치 가이드 README + 설치/제거 스크립트
 - [x] 호스팅 결정 → UGREEN DXP2800 Docker
-- [x] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨) — 이미지 빌드는 미검증
+- [x] Dockerfile (linux/amd64) + docker-compose.yml (`/data` 볼륨) — 빌드·컨테이너 실행·재시작 후 유지 확인
 - [x] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
 - [ ] NAS 리버스 프록시에 연결 + WebSocket 동작 확인

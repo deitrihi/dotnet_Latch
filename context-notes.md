@@ -53,4 +53,5 @@
 - .ps1은 Windows PowerShell 5.1 한글 깨짐 방지로 **UTF-8 BOM** 저장.
 - 개발 PC 통합 확인: 페어링 → 온라인 → 연결 44건 보고 → 잠금 v1/해제 v2 push 확인. hosts 무변경 확인 후 reset·데이터 삭제로 정리.
 - 이 과정에서 버그 발견·수정: 빈 정책에서도 hosts를 재작성하던 문제.
-- Docker Desktop이 꺼져 있어 이미지 빌드는 미검증.
+- Docker 이미지 검증: 비루트(app) 실행, /data 쓰기, tzdata 존재, X-Forwarded-Proto 반영, 재시작 후 DB·로그인 쿠키 유지 확인.
+- DataProtection "unencrypted key" 경고는 수용 — 키가 컨테이너 전용 볼륨에만 있음.
