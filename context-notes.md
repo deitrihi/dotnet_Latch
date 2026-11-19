@@ -68,3 +68,7 @@
 - 다운로드는 **부모 로그인 필요** — 공개할 이유 없음. 자녀 PC 설정 시 어차피 로그인해서 페어링 코드를 받음.
 - 패키지는 wwwroot(공개 정적 파일) 밖 `/app/downloads`에 둠. 경로는 `Latch:AgentPackagePath`로 변경 가능(테스트용).
 - 서명 없는 bat/exe라 다운로드 후 보안 경고가 뜸 → 화면 안내에 "실행" 클릭 명시. 압축을 풀지 않고 zip 안에서 실행하면 실패하므로 안내에 포함.
+
+## 2026-11-19 — 버그: 목록 화면 잠그기 무반응
+- 원인: `value="@(!d.Locked)"`처럼 bool을 속성에 넣으면 Razor가 boolean 속성으로 처리 → true면 `value="value"`, false면 속성 제거. 서버가 "value"를 bool로 못 읽어 false로 처리.
+- 수정: 문자열 `"true"/"false"`로 출력. **Razor 속성에 bool을 직접 넣지 말 것.**

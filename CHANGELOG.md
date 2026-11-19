@@ -2,6 +2,12 @@
 
 ## [미커밋]
 
+- src/Latch.Server/Pages/Index.cshtml — 목록의 잠그기 버튼이 locked=value를 보내던 버그 수정 (Razor boolean 속성 처리)
+- tests/Latch.Tests/ServerTests.cs — 목록 화면 잠금·해제 버튼 회귀 테스트
+- context-notes.md, claude_logs — 원인 기록
+
+## 2026-11-19 | dcfc734
+
 - claude_logs/자녀-PC-관리-설계.md — 설치 패키지·배포·push 기록 추가
 
 ## 2026-11-19 | 9c723e2
