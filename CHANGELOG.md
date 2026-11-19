@@ -2,6 +2,11 @@
 
 ## [미커밋]
 
+- scripts/install-agent.bat, deploy.bat — 줄바꿈을 CRLF로 변환 (LF 전용 bat 파싱 오류 방지)
+- .gitattributes — .bat CRLF 고정
+
+## 2026-11-19 | 73c424c
+
 - Dockerfile — 이미지 빌드 시 Agent+LockUI(win-x64)와 설치 스크립트를 latch-agent-win-x64.zip으로 묶어 /app/downloads에 포함
 - src/Latch.Server/Services/AgentPackage.cs — 설치 패키지 위치·정보 제공
 - src/Latch.Server/Program.cs — /download/agent 다운로드 엔드포인트 (로그인 필요)
