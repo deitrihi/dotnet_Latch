@@ -49,12 +49,15 @@ docker save latch-server:latest -o latch-server.tar
 ```
 `publish\agent` 폴더가 만들어집니다 (.NET 포함, 자녀 PC에 별도 설치 불필요).
 
-### 설치 (자녀 PC, 관리자 PowerShell)
+### 설치 (자녀 PC)
 1. 웹에서 **페어링 코드 발급** (10분 유효, 1회용)
-2. `publish\agent` 폴더를 자녀 PC로 복사한 뒤:
+2. `publish\agent` 폴더를 자녀 PC로 복사한 뒤 **`install-agent.bat` 더블클릭**
+   - 관리자 권한 요청 → 서버 주소(Enter = 기본값) → 페어링 코드 입력
+   - PowerShell 실행 정책·다운로드 파일 차단은 bat이 알아서 우회
+
+PowerShell에서 직접 실행할 때는 (관리자 권한):
 ```powershell
-Set-ExecutionPolicy -Scope Process Bypass
-.\install-agent.ps1 -ServerUrl https://<도메인> -Code <페어링코드>
+powershell -ExecutionPolicy Bypass -File .\install-agent.ps1 -ServerUrl https://<도메인> -Code <페어링코드>
 ```
 `C:\Program Files\Latch`에 설치되고 `LatchAgent` 서비스가 자동 시작됩니다.
 업데이트는 새 게시 폴더에서 `-Code` 없이 다시 실행하면 됩니다.

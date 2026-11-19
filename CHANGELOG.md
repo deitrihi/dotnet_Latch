@@ -2,6 +2,12 @@
 
 ## [미커밋]
 
+- scripts/install-agent.bat — 관리자 권한 상승·실행 정책 우회·파일 차단 해제 후 서버 주소/코드를 물어 install-agent.ps1 실행
+- scripts/publish-agent.ps1 — 게시 폴더에 install-agent.bat 포함
+- README.md — bat 더블클릭 설치 방법으로 안내 변경
+
+## 2026-11-19 | bea4e38
+
 - checklist.md — nginx·DNS·HTTPS 외부 접속 확인 표시
 - context-notes.md — 리버스 프록시가 NPM이 아닌 nginx-proxy 컨테이너임을 정정
 

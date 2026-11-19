@@ -46,3 +46,8 @@
 ## 외부 공개
 - DNS latch CNAME 반영 확인, https://latch.deitrihi.dev 외부 접속·와일드카드 인증서 검증 통과
 - 미해결: 초기 비밀번호 설정(사용자), WebSocket 실연결은 에이전트 설치 시 확인
+
+## install-agent.bat
+- 요청: 자녀 PC에서 "스크립트를 실행할 수 없음"(실행 정책) → 더블클릭 설치 bat 작성
+- 행동: 관리자 상승 + Unblock-File + ExecutionPolicy Bypass, 기본 서버 주소 latch.deitrihi.dev
+- 확인: 가짜 ps1로 3개 분기 검증 (파이프 입력은 set /p 특성상 다중 줄 검증 불가 → 분기별 검증)
