@@ -2,6 +2,10 @@
 
 ## [미커밋]
 
+- checklist.md — 자녀 PC 설치·WebSocket 실연결 확인 표시
+
+## 2026-11-19 | 21b2550
+
 - scripts/install-agent.bat — 관리자 권한 상승·실행 정책 우회·파일 차단 해제 후 서버 주소/코드를 물어 install-agent.ps1 실행
 - scripts/publish-agent.ps1 — 게시 폴더에 install-agent.bat 포함
 - README.md — bat 더블클릭 설치 방법으로 안내 변경

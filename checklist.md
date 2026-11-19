@@ -41,4 +41,4 @@
 - [x] ForwardedHeaders 설정 (리버스 프록시 뒤 HTTPS 인식)
 - [x] NAS 배포 (deploy.sh, 192.168.0.200:8085 기동·LAN 접속 확인)
 - [x] nginx(nas.conf) 연결 + DNS(latch.deitrihi.dev) + HTTPS 확인
-- [ ] WebSocket 실연결 확인 (자녀 PC 에이전트 설치 시)
+- [x] 자녀 PC 설치·페어링, WebSocket(101) 실연결 및 60초 이상 유지 확인
