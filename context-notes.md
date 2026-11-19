@@ -55,3 +55,9 @@
 - 이 과정에서 버그 발견·수정: 빈 정책에서도 hosts를 재작성하던 문제.
 - Docker 이미지 검증: 비루트(app) 실행, /data 쓰기, tzdata 존재, X-Forwarded-Proto 반영, 재시작 후 DB·로그인 쿠키 유지 확인.
 - DataProtection "unencrypted key" 경고는 수용 — 키가 컨테이너 전용 볼륨에만 있음.
+
+## 2026-11-19 — 배포 스크립트
+- `C:\dev\dho\dbsql`의 deploy.bat/deploy.sh 패턴을 따름 (Git Bash 런처 + SSH 키 인증 + NAS에서 빌드).
+- SSH 위 rsync는 UGREEN에서 "invalid path" 문제가 있어 제외. rsync 데몬 → 없으면 tar. 현재 Git Bash에는 rsync가 없어 tar 사용.
+- NAS `/volume1/docker/latch`에 UGOS가 만든 root 소유 `docker-compose.yaml`이 있어, compose가 `.yml`보다 우선 읽음 → 스크립트에서 `-f docker-compose.yml` 명시.
+- `deploy.config`(rsync 비밀번호 포함)는 git 제외. 실제 값은 dbsql 설정에서 경로만 latch로 바꿔 복사.

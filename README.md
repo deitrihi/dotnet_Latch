@@ -15,6 +15,10 @@
 
 ### 이미지 빌드
 
+**권장: 배포 스크립트** — `deploy.config.example`을 `deploy.config`로 복사해 NAS 접속 정보를 채운 뒤
+`deploy.bat`을 더블클릭(또는 Git Bash에서 `./deploy.sh`). 로컬 빌드 검증 → 소스 전송 → NAS에서
+`docker compose up -d --build`까지 한 번에 합니다. SSH 키 인증과 배포 계정의 docker 그룹 권한이 필요합니다.
+
 **A. NAS에서 직접** (SSH 접속 후, 저장소를 NAS에 복사한 폴더에서)
 ```sh
 docker compose up -d --build

@@ -2,6 +2,16 @@
 
 ## [미커밋]
 
+- deploy.sh — 로컬 빌드 검증 → NAS 전송(rsync 데몬 또는 tar) → docker compose 빌드·기동 배포 스크립트
+- deploy.bat — Git Bash로 deploy.sh를 실행하는 더블클릭 런처
+- deploy.config.example — NAS 접속 정보 템플릿
+- .gitignore — deploy.config 제외
+- .gitattributes — .sh 파일 LF 고정
+- README.md — 배포 스크립트 사용법 추가
+- context-notes.md — 배포 스크립트 결정 기록
+
+## 2026-11-19 | 3e221f8
+
 - src/Latch.Server/Pages/Login.cshtml.cs — 정렬 없는 FirstOrDefault EF 경고 제거
 - checklist.md, context-notes.md — Docker 이미지 검증 결과 기록
 
