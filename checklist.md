@@ -18,14 +18,14 @@
 - [x] 웹 UI: 디바이스 목록 / 잠금 토글 / 차단 목록 편집 / 연결 목록
 
 ## 3. 에이전트 (Latch.Agent)
-- [ ] Worker Service + Windows 서비스 등록
-- [ ] 페어링 + 토큰 DPAPI 저장
-- [ ] SignalR 클라이언트 (자동 재연결)
-- [ ] 마지막 정책 로컬 저장/복원
-- [ ] 방화벽 앱 차단 적용/해제
-- [ ] hosts 도메인 차단 적용/해제
-- [ ] TCP 연결 수집 + 전송
-- [ ] 사용자 세션에 LockUI 실행/감시
+- [x] Worker Service + Windows 서비스 등록
+- [x] 페어링 + 토큰 저장 (ProgramData ACL 보호)
+- [x] SignalR 클라이언트 (자동 재연결)
+- [x] 마지막 정책 로컬 저장/복원
+- [x] 방화벽 앱 차단 적용/해제
+- [x] hosts 도메인 차단 적용/해제
+- [x] TCP 연결 수집 + 전송
+- [x] 사용자 세션에 LockUI 실행/감시
 
 ## 4. 잠금 화면 (Latch.LockUI)
 - [ ] 전체화면 topmost 창 + 안내 문구

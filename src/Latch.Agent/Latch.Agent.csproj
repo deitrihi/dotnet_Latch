@@ -4,6 +4,7 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UserSecretsId>dotnet-Latch.Agent-71d2a00b-a9cc-4ead-9548-2afa3f253eb1</UserSecretsId>
   </PropertyGroup>
 

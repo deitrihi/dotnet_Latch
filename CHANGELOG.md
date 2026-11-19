@@ -2,6 +2,19 @@
 
 ## [미커밋]
 
+- src/Latch.Shared/LocalUiState.cs — 에이전트↔LockUI 로컬 잠금 상태 파일 계약
+- src/Latch.Agent/AgentStore.cs — 권한 제한된 ProgramData에 설정·정책·UI 상태 저장
+- src/Latch.Agent/Enforcement/HostsFile.cs — hosts 관리 구역으로 도메인 차단 + DNS 캐시 비우기
+- src/Latch.Agent/Enforcement/FirewallBlocker.cs — 방화벽 COM API로 앱 아웃바운드 차단 규칙 동기화
+- src/Latch.Agent/Enforcement/LockUiLauncher.cs — 활성 사용자 세션에 LockUI 실행·감시
+- src/Latch.Agent/Monitoring/TcpConnections.cs — 프로세스별 외부 TCP 연결 수집
+- src/Latch.Agent/PolicyEnforcer.cs, AgentWorker.cs — 정책 적용, 서버 연결 유지·재시도, 주기 보고
+- src/Latch.Agent/Commands.cs, Program.cs — pair/reset 명령, Windows 서비스 호스트
+- tests/Latch.Tests/AgentTests.cs — hosts·방화벽 대상 계산·TCP 파싱 테스트
+- checklist.md, context-notes.md — 3단계 진행 및 결정 기록
+
+## 2026-11-19 | bc5b123
+
 - src/Latch.Server/Data/LatchDb.cs — 부모 계정·디바이스·페어링 코드 SQLite 모델
 - src/Latch.Server/Services/* — 페어링·토큰 해시·정책 push 서비스, 디바이스 토큰 인증 핸들러, 온라인 추적
 - src/Latch.Server/Hubs/DeviceHub.cs — 에이전트용 SignalR 허브 (정책 조회, 연결 보고)
