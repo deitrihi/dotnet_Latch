@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Latch.Agent/Latch.Agent.csproj" />
+    <Project Path="src/Latch.LockUI/Latch.LockUI.csproj" />
+    <Project Path="src/Latch.Server/Latch.Server.csproj" />
+    <Project Path="src/Latch.Shared/Latch.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Latch.Tests/Latch.Tests.csproj" />
+  </Folder>
+</Solution>

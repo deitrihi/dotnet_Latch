@@ -2,6 +2,13 @@
 
 ## [미커밋]
 
+- Latch.slnx, src/*, tests/Latch.Tests — 솔루션과 5개 프로젝트 생성 (Agent/Tests는 net10.0-windows)
+- .gitignore — dotnet 기본 gitignore 추가
+- checklist.md — 0단계 완료 표시
+- context-notes.md — 리버스 프록시(Nginx Proxy Manager) 기록
+
+## 2026-11-19 | 53a9e9d
+
 - plan.md — 배포 대상을 클라우드에서 NAS(UGREEN DXP2800) Docker로 변경
 - checklist.md — Docker 배포 작업 항목 추가
 - context-notes.md — 호스팅 변경 결정과 이유 기록

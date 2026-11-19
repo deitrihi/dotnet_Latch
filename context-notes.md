@@ -16,3 +16,7 @@
 - 사용자 NAS: UGREEN DXP2800 (Intel N100, x64). Docker와 다른 웹 서비스가 이미 운영 중.
 - 서버는 ASP.NET Core 유지 — Linux 컨테이너 공식 지원, 메모리 부담 적음, `Latch.Shared`를 에이전트와 공유 가능.
 - 외부 접속은 기존 웹 서비스와 같은 리버스 프록시 사용. TLS는 프록시가 처리하고 컨테이너는 HTTP만 연다.
+- 리버스 프록시: **Nginx Proxy Manager**. 프록시 호스트에서 "Websockets Support" 켜야 함.
+
+## 2026-11-19 — 구현 착수
+- Agent/Tests는 `net10.0-windows` (방화벽 COM, P/Invoke 사용). Shared/Server는 `net10.0` (Docker Linux).

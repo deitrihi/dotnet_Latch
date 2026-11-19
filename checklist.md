@@ -3,7 +3,7 @@
 ## 0. 기반
 - [x] 요구사항 확인 (자녀 PC 관리, 클라우드 서버, 1~2대)
 - [x] plan / checklist / context-notes 작성
-- [ ] 솔루션 + 5개 프로젝트 생성, 빌드 확인
+- [x] 솔루션 + 5개 프로젝트 생성, 빌드 확인
 
 ## 1. 공통 계약 (Latch.Shared)
 - [ ] 정책 DTO (`LockState`, `BlockedApps`, `BlockedDomains`)
