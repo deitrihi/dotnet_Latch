@@ -68,5 +68,6 @@
 <form method="post" asp-page-handler="Delete" class="card"
       onsubmit="return confirm('이 PC 등록을 삭제할까요? 에이전트를 다시 페어링해야 합니다.')">
     <h2>등록 삭제</h2>
+    <p class="muted">자녀 PC에서 먼저 <code>C:\Program Files\Latch\uninstall-agent.bat</code>을 실행해 프로그램과 차단 설정을 지운 뒤 삭제하세요. 웹에서만 삭제하면 PC에는 마지막 정책이 그대로 남습니다.</p>
     <button class="ghost">이 PC 삭제</button>
 </form>

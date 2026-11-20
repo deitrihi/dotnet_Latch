@@ -7,6 +7,9 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
 }
 
 $dest = Join-Path $env:ProgramFiles 'Latch'
+# 설치 폴더 안에서 실행해도 폴더를 지울 수 있도록 작업 위치를 옮긴다
+Set-Location $env:TEMP
+
 if (Get-Service LatchAgent -ErrorAction SilentlyContinue) {
     Stop-Service LatchAgent -Force
     sc.exe delete LatchAgent | Out-Null
@@ -16,6 +19,12 @@ Get-Process Latch.LockUI -ErrorAction SilentlyContinue | Stop-Process -Force
 $agent = Join-Path $dest 'Latch.Agent.exe'
 if (Test-Path $agent) { & $agent reset }
 
-Remove-Item $dest -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item (Join-Path $env:ProgramData 'Latch') -Recurse -Force -ErrorAction SilentlyContinue
-Write-Host '제거 완료. 웹 화면에서도 이 PC 등록을 삭제하세요.'
+$data = Join-Path $env:ProgramData 'Latch'
+Remove-Item $dest, $data -Recurse -Force -ErrorAction SilentlyContinue
+
+$left = @($dest, $data) | Where-Object { Test-Path $_ }
+if ($left) {
+    Write-Warning "다음 폴더를 지우지 못했습니다 (사용 중인 파일). 재부팅 후 직접 삭제하세요: $($left -join ', ')"
+} else {
+    Write-Host '제거 완료. 웹 화면에서도 이 PC 등록을 삭제하세요.'
+}

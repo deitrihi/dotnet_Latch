@@ -18,7 +18,7 @@ COPY src/Latch.LockUI/ src/Latch.LockUI/
 RUN for p in Latch.Agent Latch.LockUI; do \
       dotnet publish src/$p -c Release -r win-x64 --self-contained -p:EnableWindowsTargeting=true -o /pkg/Latch || exit 1; \
     done
-COPY scripts/install-agent.bat scripts/install-agent.ps1 scripts/uninstall-agent.ps1 /pkg/Latch/
+COPY scripts/install-agent.bat scripts/install-agent.ps1 scripts/uninstall-agent.bat scripts/uninstall-agent.ps1 /pkg/Latch/
 RUN cd /pkg && zip -qr latch-agent-win-x64.zip Latch
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0

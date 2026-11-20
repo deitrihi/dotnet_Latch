@@ -2,6 +2,14 @@
 
 ## [미커밋]
 
+- scripts/uninstall-agent.bat — 더블클릭 제거: 관리자 상승, Y/N 확인, 임시 복사본으로 uninstall-agent.ps1 실행 (설치 폴더 안에서도 동작)
+- scripts/uninstall-agent.ps1 — 작업 위치를 TEMP로 옮겨 설치 폴더 삭제 실패 방지, 남은 폴더 경고
+- Dockerfile, scripts/publish-agent.ps1 — 패키지에 uninstall-agent.bat 포함
+- README.md, src/Latch.Server/Pages/Device.cshtml — 제거 방법 안내
+- context-notes.md, claude_logs — 결정 기록
+
+## 2026-11-19 | e0d1b06
+
 - src/Latch.Server/Pages/Index.cshtml — 목록의 잠그기 버튼이 locked=value를 보내던 버그 수정 (Razor boolean 속성 처리)
 - tests/Latch.Tests/ServerTests.cs — 목록 화면 잠금·해제 버튼 회귀 테스트
 - context-notes.md, claude_logs — 원인 기록

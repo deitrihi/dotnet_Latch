@@ -8,6 +8,6 @@ foreach ($project in 'Latch.Agent', 'Latch.LockUI') {
     dotnet publish (Join-Path $root "src\$project") -c Release -r win-x64 --self-contained -o $out
     if ($LASTEXITCODE) { throw "$project 게시 실패" }
 }
-Copy-Item (Join-Path $PSScriptRoot 'install-agent.ps1'), (Join-Path $PSScriptRoot 'install-agent.bat'), (Join-Path $PSScriptRoot 'uninstall-agent.ps1') $out
+Copy-Item (Join-Path $PSScriptRoot 'install-agent.ps1'), (Join-Path $PSScriptRoot 'install-agent.bat'), (Join-Path $PSScriptRoot 'uninstall-agent.bat'), (Join-Path $PSScriptRoot 'uninstall-agent.ps1') $out
 
 Write-Host "완료: $out — 이 폴더를 자녀 PC로 복사한 뒤 install-agent.bat 을 더블클릭하세요."

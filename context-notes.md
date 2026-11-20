@@ -72,3 +72,11 @@
 ## 2026-11-19 — 버그: 목록 화면 잠그기 무반응
 - 원인: `value="@(!d.Locked)"`처럼 bool을 속성에 넣으면 Razor가 boolean 속성으로 처리 → true면 `value="value"`, false면 속성 제거. 서버가 "value"를 bool로 못 읽어 false로 처리.
 - 수정: 문자열 `"true"/"false"`로 출력. **Razor 속성에 bool을 직접 넣지 말 것.**
+
+## 2026-11-20 — 제거 프로그램 (uninstall-agent.bat)
+- 설치 시 스크립트도 `C:\Program Files\Latch`에 복사되므로 **설치 폴더 안에서 실행되는 경우**를 기본으로 설계.
+  - ps1: 시작 시 `Set-Location $env:TEMP` (작업 위치가 설치 폴더면 삭제 실패). 남은 폴더는 경고로 표시 (이전엔 SilentlyContinue로 조용히 실패).
+  - bat: ps1을 `%TEMP%`에 복사해 실행. cmd는 bat을 한 줄씩 읽으므로 나머지 명령을 **한 괄호 블록**으로 묶음.
+  - 마지막은 `exit /b`가 아닌 `exit` — `exit /b`는 지워진 폴더로 돌아가며 "지정된 경로를 찾을 수 없습니다"를 출력 (stderr 분리로 확인). `setlocal`은 원인이 아니었음.
+- 실수 방지로 Y/N 확인.
+- 2026-11-19 브랜치에는 PR #2가 열려 있어 섞이지 않도록 `2026-11-20` 브랜치에서 작업.
