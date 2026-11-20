@@ -63,10 +63,11 @@ powershell -ExecutionPolicy Bypass -File .\install-agent.ps1 -ServerUrl https://
 업데이트는 새 게시 폴더에서 `-Code` 없이 다시 실행하면 됩니다.
 
 ### 제거
-```powershell
-.\uninstall-agent.ps1
-```
-방화벽 규칙과 hosts 차단을 정리한 뒤 제거합니다.
+`uninstall-agent.bat` 더블클릭 → 관리자 권한 요청 **예** → `Y` 입력.
+압축 푼 `Latch` 폴더나 `C:\Program Files\Latch` 어디서 실행해도 됩니다.
+
+서비스 중지·삭제 → 잠금 화면 종료 → **방화벽 규칙·hosts 차단 정리** → `C:\Program Files\Latch`, `C:\ProgramData\Latch` 삭제 순으로 진행합니다.
+폴더만 손으로 지우면 차단이 남으므로 반드시 이 파일로 제거하세요. 제거 후 웹에서도 **이 PC 삭제**를 누르세요.
 
 ## 3. 사용
 
